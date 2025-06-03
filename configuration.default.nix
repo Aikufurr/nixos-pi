@@ -53,6 +53,10 @@
     fish
   ];
 
+  programs.fish = {
+      enable = true;
+  };
+
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "yes";
