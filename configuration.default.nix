@@ -148,24 +148,7 @@
   };
 
   # put your own configuration here, for example ssh keys:
-  users.defaultUserShell = pkgs.fish;
-  users.mutableUsers = true;
-  users.groups = {
-    aiku = {
-      gid = 1000;
-      name = "aiku";
-    };
-  };
-  users.users = {
-    aiku = {
-      uid = 1000;
-      home = "/home/aiku";
-      name = "aiku";
-      group = "users";
-      shell = pkgs.fish;
-      extraGroups = [ "wheel" "docker" "uucp" "dialout" ];
-    };
-  };
+  users.users."root".shell = pkgs.fish;
   users.users.root.openssh.authorizedKeys.keys = [
     # This is my public key
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNorG0H/G8Y+dstPpE2+d3L2ozuS+RktL5Y5hwPUb/fr1JstMdgCpL98OoQDlWmScsYY7nIJ3N6aJyoEYUBPhjutDUun6LRKKQfT8b72fpG42mMI3Q6X/rPiHbIE9vveaetjVkzy/MiGY8B5twSuekb7Q3F/UB3M0zuW/vEz57/XvXbxWBaAaiUBJKRLALiya64ZErc6AfCxNLC9+uZjiQIAK5P3+pXhWfzQScmMkWWpFS6IEimVRbwtJOQjNDJvB7wbP2yrCDl/CDpT0gsKmdRcz+D0z/Xn9jNDC8+zsyz8HOF87H2gHBKV5NKKx4Y/I8FlyP2M0aP4KcS3Mhs8vjh7n4Ri6Iy4vXf4/UtTk0IJa8NXoRDN76FOeG+Pvfa+bQ0h3CaMe6bTz/fF415gwuuf4VJs8UEgdnIjUT16lsPnPvfqgrO2PBL5NnePO8MZUyH8OK/b5/TF0w0q1QAwvdWDVLHZ3UcuqSBOcMzw7B4X5cVzFWW1NAjnmBwo02IYQnjfRRrAgWhGlMNOrwptQ1YbvJrD8jPgoax6jDCTURkXGWTkvLE2E69Gq4LHiNj6QbZnOQkw9bPI5FOXqc5oezNy2XmHv7Uvi01ChyT305iMqh7qsI+MQZwwNqZK3Kb5W3wtxUK/WMBhS9nzhq+cwGbDCIjstkDxHEqGTZMHsoiw== framework13gen"
