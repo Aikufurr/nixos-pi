@@ -47,14 +47,10 @@
     curl
     wget
     nano
+    micro
     bind
-    kubectl
-    kubernetes-helm
     iptables
-    openvpn
-    python3
-    nodejs
-    docker-compose
+    fish
   ];
 
   services.openssh = {
@@ -62,17 +58,20 @@
     settings.PermitRootLogin = "yes";
   };
 
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "client";
+
   # Some sample service.
   # Use dnsmasq as internal LAN DNS resolver.
   services.dnsmasq = {
     enable = false;
-    settings.servers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
-    settings.extraConfig = ''
-      address=/fenrir.test/192.168.100.6
-      address=/recalune.test/192.168.100.7
-      address=/eth.nixpi.test/192.168.100.3
-      address=/wlan.nixpi.test/192.168.100.4
-    '';
+    settings.servers = [ "1.1.1.1" "8.8.8.8" "8.8.4.4" ];
+#    settings.extraConfig = ''
+#      address=/fenrir.test/192.168.100.6
+#      address=/recalune.test/192.168.100.7
+#      address=/eth.nixpi.test/192.168.100.3
+#      address=/wlan.nixpi.test/192.168.100.4
+#    '';
   };
 
   # services.openvpn = {
@@ -84,13 +83,13 @@
   #     };
   # };
 
-  programs.zsh = {
-    enable = true;
-    ohMyZsh = {
-      enable = true;
-      theme = "bira";
-    };
-  };
+#  programs.zsh = {
+#    enable = true;
+#    ohMyZsh = {
+#      enable = true;
+#      theme = "bira";
+#    };
+#  };
 
 
   virtualisation.docker.enable = true;
@@ -127,9 +126,9 @@
     wireless.enable = true;
     wireless.interfaces = [ "wlan0" ];
     # If you want to connect also via WIFI to your router
-    # wireless.networks."SATRIA".psk = "wifipassword";
+    wireless.networks."Glide".psk = "";
     # You can set default nameservers
-    # nameservers = [ "192.168.100.3" "192.168.100.4" "192.168.100.1" ];
+    nameservers = [ "1.1.1.1" ];
     # You can set default gateway
     # defaultGateway = {
     #  address = "192.168.1.1";
@@ -145,27 +144,27 @@
   };
 
   # put your own configuration here, for example ssh keys:
-  users.defaultUserShell = pkgs.zsh;
+  users.defaultUserShell = pkgs.fish;
   users.mutableUsers = true;
   users.groups = {
-    nixos = {
+    aiku = {
       gid = 1000;
-      name = "nixos";
+      name = "aiku";
     };
   };
   users.users = {
-    nixos = {
+    aiku = {
       uid = 1000;
-      home = "/home/nixos";
-      name = "nixos";
-      group = "nixos";
-      shell = pkgs.zsh;
-      extraGroups = [ "wheel" "docker" ];
+      home = "/home/aiku";
+      name = "aiku";
+      group = "users";
+      shell = pkgs.fish;
+      extraGroups = [ "wheel" "docker" "uucp" "dialout" ];
     };
   };
   users.users.root.openssh.authorizedKeys.keys = [
     # This is my public key
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqlXJv/noNPmZMIfjJguRX3O+Z39xeoKhjoIBEyfeqgKGh9JOv7IDBWlNnd3rHVnVPzB9emiiEoAJpkJUnWNBidL6vPYn13r6Zrt/2WLT6TiUFU026ANdqMjIMEZrmlTsfzFT+OzpBqtByYOGGe19qD3x/29nbszPODVF2giwbZNIMo2x7Ww96U4agb2aSAwo/oQa4jQsnOpYRMyJQqCUhvX8LzvE9vFquLlrSyd8khUsEVV/CytmdKwUUSqmlo/Mn7ge/S12rqMwmLvWFMd08Rg9NHvRCeOjgKB4EI6bVwF8D6tNFnbsGVzTHl7Cosnn75U11CXfQ6+8MPq3cekYr lucernae@lombardia-N43SM"
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNorG0H/G8Y+dstPpE2+d3L2ozuS+RktL5Y5hwPUb/fr1JstMdgCpL98OoQDlWmScsYY7nIJ3N6aJyoEYUBPhjutDUun6LRKKQfT8b72fpG42mMI3Q6X/rPiHbIE9vveaetjVkzy/MiGY8B5twSuekb7Q3F/UB3M0zuW/vEz57/XvXbxWBaAaiUBJKRLALiya64ZErc6AfCxNLC9+uZjiQIAK5P3+pXhWfzQScmMkWWpFS6IEimVRbwtJOQjNDJvB7wbP2yrCDl/CDpT0gsKmdRcz+D0z/Xn9jNDC8+zsyz8HOF87H2gHBKV5NKKx4Y/I8FlyP2M0aP4KcS3Mhs8vjh7n4Ri6Iy4vXf4/UtTk0IJa8NXoRDN76FOeG+Pvfa+bQ0h3CaMe6bTz/fF415gwuuf4VJs8UEgdnIjUT16lsPnPvfqgrO2PBL5NnePO8MZUyH8OK/b5/TF0w0q1QAwvdWDVLHZ3UcuqSBOcMzw7B4X5cVzFWW1NAjnmBwo02IYQnjfRRrAgWhGlMNOrwptQ1YbvJrD8jPgoax6jDCTURkXGWTkvLE2E69Gq4LHiNj6QbZnOQkw9bPI5FOXqc5oezNy2XmHv7Uvi01ChyT305iMqh7qsI+MQZwwNqZK3Kb5W3wtxUK/WMBhS9nzhq+cwGbDCIjstkDxHEqGTZMHsoiw== framework13gen"
   ];
-  system.stateVersion = "23.05";
+  system.stateVersion = "25.05";
 }
